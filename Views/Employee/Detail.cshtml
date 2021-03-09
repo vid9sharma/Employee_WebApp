@@ -1,0 +1,26 @@
+﻿@model Employee
+@{
+    ViewBag.Title = "Employee Detail";
+}
+<h1>Employee Detail</h1>
+<table class="table table-bordered table-striped">
+    <tr>
+        <td>ID</td>
+        <td>@Model.EmployeeID</td>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td>@Model.FirstName @Model.LastName</td>
+    </tr>
+    <tr>
+        <td>Job Title</td>
+        <td>@Model.JobTitle</td>
+    </tr>
+    <tr>
+        <td>Salart</td>
+        <td>@Model.Salary</td>
+    </tr>
+</table>
+<a asp-controller="Employee" asp-action="Detail" asp-route-id="@Model.EmployeeID" asp-route-browse="previous" class="btn btn-primary">Previous</a>
+<a asp-controller="Employee" asp-action="Detail" asp-route-id="@Model.EmployeeID" asp-route-browse="next" class="btn btn-primary">Next</a>
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Home</a>
