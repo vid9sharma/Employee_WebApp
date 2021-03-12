@@ -21,10 +21,10 @@
                 <td>@employee.FirstName</td>
                 <td>@employee.LastName</td>
                 <td>@employee.JobTitle</td>
-                <td>@employee.Salary</td>
+                <td>@string.Format("{0:c}", @employee.Salary)</td>
                 <td>
-                    <a asp-controller="Employee" asp-action="Detail" asp-route-id="@employee.EmployeeID">View</a> | 
-                    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeID">Edit</a> | 
+                    <a asp-controller="Employee" asp-action="Detail" asp-route-id="@employee.EmployeeID">View</a> |
+                    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeID">Edit</a> |
                     <a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeID">Delete</a>
                 </td>
             </tr>

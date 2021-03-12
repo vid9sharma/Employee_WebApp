@@ -13,8 +13,8 @@
         <td>@Model.JobTitle</td>
     </tr>
     <tr>
-        <td>Salart</td>
-        <td>@Model.Salary</td>
+        <td>Salary</td>
+        <td>@string.Format("{0:c}", @Model.Salary)</td>
     </tr>
 </table>
 <a asp-controller="Employee" asp-action="Detail" asp-route-id="@Model.EmployeeID" asp-route-browse="previous" class="btn btn-primary">Previous</a>
