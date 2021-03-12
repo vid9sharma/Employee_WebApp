@@ -11,10 +11,15 @@ namespace Employee_WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private DB dbContext = new DB();
+        private EmployeeContext employeeContext { get; set; }
+
+        public HomeController(EmployeeContext ctx)
+        {
+            employeeContext = ctx;
+        }
         public IActionResult Index()
         {
-            List<Employee> employees = dbContext.GetEmployees();
+            var employees = employeeContext.Employees.OrderBy(e => e.FirstName).ToList();
             return View(employees);
         }
     }

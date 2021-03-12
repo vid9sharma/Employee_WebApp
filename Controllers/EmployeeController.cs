@@ -9,7 +9,12 @@ namespace Employee_WebApp.Controllers
 {
     public class EmployeeController : Controller
     {
-        private DB dbContext = new DB();
+        private EmployeeContext employeeContext { get; set; }
+
+        public EmployeeController(EmployeeContext ctx)
+        {
+            employeeContext = ctx;
+        }
 
         [HttpGet]
         public IActionResult Add()
@@ -18,20 +23,29 @@ namespace Employee_WebApp.Controllers
             return View("Edit", new Employee());
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Action = "Edit";
+            var employee = employeeContext.Employees.Find(id);
+            return View(employee);
+        }
+
         [HttpPost]
         public IActionResult Edit(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                //add new employee to list
-                List<Employee> employees = dbContext.GetEmployees();
-                employees.Add(employee);
-                dbContext.SaveEmployees(employees);
+                if (employee.EmployeeID == 0)
+                    employeeContext.Employees.Add(employee);
+                else
+                    employeeContext.Employees.Update(employee);
+                employeeContext.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.Action = "Add";
+                ViewBag.Action = (employee.EmployeeID == 0) ? "Add" : "Edit";
                 return View(employee);
             }
         }
@@ -39,38 +53,48 @@ namespace Employee_WebApp.Controllers
         [HttpGet]
         public IActionResult Detail(int id, string browse)
         {
-            List<Employee> listOfEmployee = dbContext.GetEmployees();
-            Employee employee;
-            
+            var employee = employeeContext.Employees.Find(id);
+            var maxId = employeeContext.Employees.Select(s => s.EmployeeID).Max();
+            var minId = employeeContext.Employees.Select(s => s.EmployeeID).Min();
+
             if (string.Equals(browse, "next"))
             {
-                //find next employee
-                int index = listOfEmployee.FindIndex(e => e.EmployeeID == id);
-
-                //check if it is last employee in the list
-                if ((index + 1) >= listOfEmployee.Count)
+                if (id == maxId)
                 {
-                    index = -1;
+                    employee = employeeContext.Employees.Find(minId);
                 }
-                employee = listOfEmployee[index + 1];
+                else
+                {
+                    employee = employeeContext.Employees.Where(e => e.EmployeeID > id).OrderBy(o => o.EmployeeID).FirstOrDefault();
+                }
             }
             else if (string.Equals(browse, "previous"))
             {
-                //find previous employee
-                int index = listOfEmployee.FindIndex(e => e.EmployeeID == id);
-
-                //check if it is first employee in the list
-                if ((index - 1) < 0)
+                if (id == minId)
                 {
-                    index = listOfEmployee.Count;
+                    employee = employeeContext.Employees.Find(maxId);
                 }
-                employee = listOfEmployee[index - 1];
-            }
-            else
-            {
-                employee = listOfEmployee.Where(e => e.EmployeeID == id).FirstOrDefault();
+                else
+                {
+                    employee = employeeContext.Employees.Where(e => e.EmployeeID < id).OrderByDescending(o => o.EmployeeID).FirstOrDefault();
+                }
             }
             return View(employee);
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var employee = employeeContext.Employees.Find(id);
+            return View(employee);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Employee employee)
+        {
+            employeeContext.Employees.Remove(employee);
+            employeeContext.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

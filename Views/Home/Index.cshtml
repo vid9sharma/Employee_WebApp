@@ -3,12 +3,10 @@
     ViewBag.Title = "List of Employee";
 }
 <h1>List of Employees</h1>
-<a asp-controller="Employee" asp-action="Add">Add Employee</a>
-<br />
+<a asp-controller="Employee" asp-action="Add">Add New Employee</a>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Job Title</th>
@@ -20,12 +18,15 @@
         @foreach (var employee in @Model)
         {
             <tr>
-                <td>@employee.EmployeeID</td>
                 <td>@employee.FirstName</td>
                 <td>@employee.LastName</td>
                 <td>@employee.JobTitle</td>
                 <td>@employee.Salary</td>
-                <td><a asp-controller="Employee" asp-action="Detail" asp-route-id="@employee.EmployeeID">View</a></td>
+                <td>
+                    <a asp-controller="Employee" asp-action="Detail" asp-route-id="@employee.EmployeeID">View</a> | 
+                    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeID">Edit</a> | 
+                    <a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeID">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
